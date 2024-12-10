@@ -82,22 +82,46 @@ module.exports = (db) => {
     
             res.render('favourites', { favourites: results, user: req.session.user });
         });
-    });    
+    });
+       
 
     // Add a restaurant to favourites
     router.post('/favourites', requireLogin, (req, res) => {
         const { restaurantName, restaurantAddress, restaurantRating } = req.body;
-        const userId = req.session.user.id;
+    const userId = req.session.user.id;
 
-        const sql = `INSERT INTO favourites (user_id, restaurant_name, restaurant_address, restaurant_rating) VALUES (?, ?, ?, ?)`;
-        db.query(sql, [userId, restaurantName, restaurantAddress, restaurantRating], (err) => {
+    if (!userId) {
+        return res.redirect('/users/login'); // Redirect to login page if user is not logged in
+    }
+
+    // Check if the restaurant is already in favourites
+    const checkSql = `SELECT * FROM favourites WHERE user_id = ? AND restaurant_name = ? AND restaurant_address = ?`;
+    db.query(checkSql, [userId, restaurantName, restaurantAddress], (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length > 0) {
+            // Restaurant already exists in favourites
+            return res.render('message', {
+                message: 'This restaurant is already in your favourites.',
+                redirectUrl: '/restaurants/favourites',
+            });
+        }
+
+        // Insert the restaurant into favourites
+        const insertSql = `INSERT INTO favourites (user_id, restaurant_name, restaurant_address, restaurant_rating) VALUES (?, ?, ?, ?)`;
+        db.query(insertSql, [userId, restaurantName, restaurantAddress, restaurantRating], (err) => {
             if (err) {
                 console.error('Database insert error:', err);
                 return res.status(500).send('Internal Server Error');
             }
-            res.redirect('/restaurants/favourites');
+
+            res.redirect('/restaurants/favourites'); // Redirect to favourites page
         });
     });
+});
 
     router.post('/favourites/remove', (req, res) => {
         const favouriteId = req.body.id;
@@ -116,6 +140,26 @@ module.exports = (db) => {
             res.redirect('/restaurants/favourites'); // Redirect back to favourites page
         });
     });
+
+    router.post('/rate', (req, res) => {
+        const { id, user_rating } = req.body;
+    
+        if (!req.session.user) {
+            return res.redirect('/users/login'); // Redirect to login page if user is not logged in
+        }
+    
+        const sql = `UPDATE favourites SET user_rating = ? WHERE id = ? AND user_id = ?`;
+        db.query(sql, [user_rating, id, req.session.user.id], (err, result) => {
+            if (err) {
+                console.error('Database update error:', err);
+                return res.status(500).send('Error updating rating.');
+            }
+    
+            res.redirect('/restaurants/favourites'); // Redirect back to the favourites page
+        });
+    });
+    
+    
     
 
     return router;

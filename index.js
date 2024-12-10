@@ -14,6 +14,7 @@ const app = express();
 const port = 8000;
 
 const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+const apiRoutes = require('./routes/api');
 
 // Configure session middleware
 app.use(
@@ -26,12 +27,6 @@ app.use(
         },
     })
 );
-
-// Middleware to make `user` available in EJS templates
-app.use((req, res, next) => {
-    res.locals.user = req.session.user || null; // `user` will be `null` if not logged in
-    next();
-});
 
 // Use sanitizer
 app.use(expressSanitizer());
@@ -61,7 +56,36 @@ db.connect((err) => {
 })
 global.db = db
 
+app.get('/', (req, res) => {
+    if (req.session && req.session.user) {
+        return res.render('index', { user: req.session.user }); // Render homepage for logged-in users
+    }
+    return res.redirect('/users/login'); // Redirect to login page if not logged in
+});
 
+
+// Middleware to check if the user is logged in
+function requireLogin(req, res, next) {
+    if (!req.session || !req.session.user) {
+        return res.redirect('/users/login'); // Redirect to login page if not logged in
+    }
+    next(); // Proceed to the requested route
+}
+
+// Apply the middleware to all routes except login and registration
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api') || req.path === '/users/login' || req.path === '/users/register') {
+        return next(); // Allow API access and login/registration pages without login
+    }
+    requireLogin(req, res, next); // Restrict access to other pages
+});
+
+
+// Middleware to make `user` available in EJS templates
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null; // `user` will be `null` if not logged in
+    next();
+});
 
 // Define application-specific data
 app.locals.shopData = { shopName: 'Restaurant Finder' };
@@ -74,14 +98,12 @@ app.use('/', mainRoutes);
 const usersRoutes = require('./routes/users');
 app.use('/users', usersRoutes);
 
+app.use('/api', apiRoutes); // All API routes will be prefixed with /api
+
+
 // Load route handlers for restaurants
 const restaurantsRoutes = require('./routes/restaurants')(db);
 app.use('/restaurants', restaurantsRoutes);
-
-// Home route
-app.get('/', (req, res) => {
-    res.redirect('/restaurants/search');
-});
 
 // Start the web app listening
 app.listen(port, () => console.log(`Node app listening on port ${port}!`));

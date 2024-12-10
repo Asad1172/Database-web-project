@@ -22,29 +22,51 @@ router.post('/register', async (req, res) => {
 router.get('/login', (req, res) => res.render('login'));
 
 // Login User
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     const sql = `SELECT * FROM users WHERE email = ?`;
     db.query(sql, [email], async (err, results) => {
-        if (err) throw err;
-
-        if (results.length === 0 || !(await bcrypt.compare(password, results[0].password))) {
-            return res.render('login', { error: 'Invalid credentials' });
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).send('Internal Server Error');
         }
 
-        req.session.user = results[0]; // Store user info in the session
-        res.redirect('/'); // Redirect after successful login
+        if (results.length === 0) {
+            return res.render('message', {
+                message: 'Invalid email or password. Please try again.',
+                redirectUrl: '/users/login',
+            });
+        }
+
+        const user = results[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.render('message', {
+                message: 'Invalid email or password. Please try again.',
+                redirectUrl: '/users/login',
+            });
+        }
+
+        req.session.user = { id: user.id, username: user.username, email: user.email };
+        return res.redirect('/');
     });
 });
 
 
 
 
+
+
 // Logout User
 router.get('/logout', (req, res) => {
-    req.session.destroy(() => {
-        res.redirect('/');
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Session destruction error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+        res.redirect('/users/login'); // Redirect to login page after logout
     });
 });
 

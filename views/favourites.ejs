@@ -22,6 +22,19 @@
                     <h3><%= favourite.restaurant_name %></h3>
                     <p>Rating: <%= favourite.restaurant_rating %></p>
                     <p>Address: <%= favourite.restaurant_address %></p>
+                    <p>Your Rating: <%= favourite.user_rating || 'Not Rated' %></p>
+                    <form action="/restaurants/rate" method="post">
+                        <input type="hidden" name="id" value="<%= favourite.id %>">
+                        <label for="rating-<%= favourite.id %>">Rate:</label>
+                        <select id="rating-<%= favourite.id %>" name="user_rating">
+                            <option value="1" <%= favourite.user_rating == 1 ? 'selected' : '' %>>1</option>
+                            <option value="2" <%= favourite.user_rating == 2 ? 'selected' : '' %>>2</option>
+                            <option value="3" <%= favourite.user_rating == 3 ? 'selected' : '' %>>3</option>
+                            <option value="4" <%= favourite.user_rating == 4 ? 'selected' : '' %>>4</option>
+                            <option value="5" <%= favourite.user_rating == 5 ? 'selected' : '' %>>5</option>
+                        </select>
+                        <button type="submit">Submit Rating</button>
+                    </form>
                     <form action="/restaurants/favourites/remove" method="post">
                         <input type="hidden" name="id" value="<%= favourite.id %>">
                         <button type="submit">Remove</button>
