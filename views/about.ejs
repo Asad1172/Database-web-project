@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Restaurant Finder</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <% if (user) { %>
+                <a href="/users/logout">Logout</a>
+                <a href="/restaurants/favourites">Favourites</a>
+            <% } else { %>
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+            <% } %>
+        </nav>
+    </header>
+    <main>
+        <h1>About Us</h1>
+        <p>Find the best restaurants in your area with ease! Our app allows you to search for restaurants by location or cuisine and save your favorite spots.</p>
+    </main>
+    <footer>
+        <p>&copy; Restaurant Finder - 2024</p>
+    </footer>
+</body>
+</html>

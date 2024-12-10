@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Favourites</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/users/logout">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h1>Your Favourite Restaurants</h1>
+        <% if (favourites && favourites.length > 0) { %>
+            <% favourites.forEach((favourite) => { %>
+                <div>
+                    <h3><%= favourite.restaurant_name %></h3>
+                    <p>Rating: <%= favourite.restaurant_rating %></p>
+                    <p>Address: <%= favourite.restaurant_address %></p>
+                    <form action="/restaurants/favourites/remove" method="post">
+                        <input type="hidden" name="id" value="<%= favourite.id %>">
+                        <button type="submit">Remove</button>
+                    </form>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>You have no favourites yet. Start searching and save your favourites!</p>
+        <% } %>
+    </main>
+    <footer>
+        <p>&copy; Restaurant Finder - 2024</p>
+    </footer>
+</body>
+</html>

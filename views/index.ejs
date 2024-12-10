@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Finder - Home</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <% if (user) { %>
+                <a href="/users/logout">Logout</a>
+                <a href="/restaurants/favourites">Favourites</a>
+            <% } else { %>
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+            <% } %>
+        </nav>
+    </header>
+    <main>
+        <h1>Welcome to Restaurant Finder!</h1>
+        <p>Search for restaurants and save your favourites.</p>
+        <form action="/restaurants/search" method="get">
+            <label for="location">City or Postcode:</label>
+            <input 
+                type="text" 
+                id="location" 
+                name="location" 
+                placeholder="Enter a city or postcode (e.g., New York, SW1A 1AA)" 
+                required
+            >
+            <label for="query">Cuisine or Keyword:</label>
+            <input 
+                type="text" 
+                id="query" 
+                name="query" 
+                placeholder="e.g., Italian, sushi, pizza" 
+                required
+            >
+            <label for="radius">Radius (meters):</label>
+            <input 
+                type="number" 
+                id="radius" 
+                name="radius" 
+                placeholder="5000 (default: 5km)" 
+                min="100" 
+                max="50000"
+            >
+            <button type="submit">Search</button>
+        </form>        
+    </main>
+    <footer>
+        <p>&copy; Restaurant Finder - 2024</p>
+    </footer>
+</body>
+</html>
+

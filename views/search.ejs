@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Restaurant Finder</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <% if (user) { %>
+                <a href="/users/logout">Logout</a>
+                <a href="/restaurants/favourites">Favourites</a>
+            <% } else { %>
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+            <% } %>
+        </nav>
+    </header>
+    <main>
+        <h1>Search Results</h1>
+        <% if (results && results.length > 0) { %>
+            <% results.forEach((restaurant) => { %>
+                <div class="restaurant">
+                    <h3><%= restaurant.name %></h3>
+                    <p>Rating: <%= restaurant.rating || 'N/A' %></p>
+                    <p>Address: <%= restaurant.formatted_address || 'N/A' %></p>
+                    <form action="/restaurants/favourites" method="post">
+                        <input type="hidden" name="restaurantName" value="<%= restaurant.name %>">
+                        <input type="hidden" name="restaurantAddress" value="<%= restaurant.formatted_address %>">
+                        <input type="hidden" name="restaurantRating" value="<%= restaurant.rating %>">
+                        <button type="submit">Add to Favourites</button>
+                    </form>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>No results found. Try another search!</p>
+        <% } %>
+    </main>
+    <footer>
+        <p>&copy; Restaurant Finder - 2024</p>
+    </footer>
+</body>
+</html>

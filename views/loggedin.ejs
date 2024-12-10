@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Restaurant Finder</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/users/logout">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h1>Welcome, <%= user.username %>!</h1>
+        <p>You are now logged in to Restaurant Finder. What would you like to do?</p>
+        <ul>
+            <li><a href="/restaurants/search">Search for Restaurants</a></li>
+            <li><a href="/restaurants/favourites">View Your Favourites</a></li>
+            <li><a href="/about">Learn More About Us</a></li>
+            <li><a href="/users/logout">Logout</a></li>
+        </ul>
+    </main>
+    <footer>
+        <p>&copy; Restaurant Finder - 2024</p>
+    </footer>
+</body>
+</html>

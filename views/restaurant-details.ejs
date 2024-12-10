@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= restaurant.name %> - Restaurant Finder</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <% if (user) { %>
+                <a href="/users/logout">Logout</a>
+                <a href="/restaurants/favourites">Favourites</a>
+            <% } else { %>
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+            <% } %>
+        </nav>
+    </header>
+    <main>
+        <h1><%= restaurant.name %></h1>
+        <p><strong>Rating:</strong> <%= restaurant.rating %></p>
+        <p><strong>Address:</strong> <%= restaurant.location.address1 %></p>
+        <p><strong>Phone:</strong> <%= restaurant.phone %></p>
+        <a href="<%= restaurant.url %>" target="_blank">View on Yelp</a>
+        <form action="/restaurants/favourites" method="post">
+            <input type="hidden" name="restaurantName" value="<%= restaurant.name %>">
+            <input type="hidden" name="restaurantAddress" value="<%= restaurant.location.address1 %>">
+            <input type="hidden" name="restaurantRating" value="<%= restaurant.rating %>">
+            <button type="submit">Add to Favourites</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; Restaurant Finder - 2024</p>
+    </footer>
+</body>
+</html>
