@@ -20,10 +20,12 @@ module.exports = (db) => {
 
     // Search for restaurants
     router.get('/search', async (req, res) => {
-        const { query, location, radius } = req.query;
+        const { query, location, minRating } = req.query;
+        const minRatingFilter = parseFloat(minRating) || 0; // Default to 0 if no minRating is provided
     
         try {
-            // Step 1: Convert location (city/postcode) to latitude and longitude
+            // Step 1: Geocode the location
+            const geocodeApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
             const geocodeResponse = await axios.get(geocodeApiUrl, {
                 params: {
                     address: location,
@@ -31,59 +33,85 @@ module.exports = (db) => {
                 },
             });
     
-            // Check if the geocode response contains results
             if (geocodeResponse.data.results.length === 0) {
-                return res.status(400).send('Invalid location. Please enter a valid city or postcode.');
+                return res.render('search', {
+                    results: [],
+                    user: req.session.user,
+                    query,
+                    location,
+                    minRating: minRatingFilter,
+                    error: 'Invalid location. Please try again.',
+                });
             }
     
             const coordinates = geocodeResponse.data.results[0].geometry.location;
             const latLng = `${coordinates.lat},${coordinates.lng}`;
     
-            // Step 2: Use latitude and longitude in the Google Places API request
+            // Step 2: Search for restaurants
+            const placesApiUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
             const placesResponse = await axios.get(placesApiUrl, {
                 params: {
                     query: query || 'restaurants',
                     location: latLng,
-                    radius: radius || 5000, // Default: 5 km
+                    radius: 5000, // Search radius in meters
                     type: 'restaurant',
                     key: process.env.GOOGLE_PLACES_API_KEY,
                 },
             });
     
+            // Filter results based on the minimum rating
+            const filteredResults = placesResponse.data.results.filter(
+                (restaurant) => restaurant.rating >= minRatingFilter
+            );
+    
             res.render('search', {
-                results: placesResponse.data.results,
+                results: filteredResults,
                 user: req.session.user,
                 query,
                 location,
-                radius,
+                minRating: minRatingFilter,
+                error: null,
             });
         } catch (error) {
-            console.error('Error fetching data:', error);
-            res.status(500).send('An error occurred while fetching restaurant data.');
+            console.error('Error fetching restaurant data:', error.message);
+            res.render('search', {
+                results: [],
+                user: req.session.user,
+                query,
+                location,
+                minRating: minRatingFilter,
+                error: 'An error occurred while fetching restaurant data. Please try again.',
+            });
         }
     });
+    
     
     module.exports = router;
 
     // Fetch user's favourite restaurants
-    router.get('/favourites', async (req, res) => {
-        if (!req.session.user) {
-            return res.redirect('/users/login'); // Redirect if user is not logged in
-        }
-    
+    router.get('/favourites', (req, res) => {
         const userId = req.session.user.id;
+        const minRating = parseFloat(req.query.minRating) || 0; // Default to 0 if no minRating is provided
     
-        const sql = `SELECT * FROM favourites WHERE user_id = ?`;
-        db.query(sql, [userId], (err, results) => {
+        const sql = `
+            SELECT * FROM favourites 
+            WHERE user_id = ? AND restaurant_rating >= ?
+        `;
+    
+        global.db.query(sql, [userId, minRating], (err, results) => {
             if (err) {
                 console.error('Database query error:', err);
                 return res.status(500).send('Internal Server Error');
             }
     
-            res.render('favourites', { favourites: results, user: req.session.user });
+            res.render('favourites', {
+                favourites: results,
+                user: req.session.user,
+                minRating, // Pass the current filter value to the template
+            });
         });
     });
-       
+    
 
     // Add a restaurant to favourites
     router.post('/favourites', requireLogin, (req, res) => {

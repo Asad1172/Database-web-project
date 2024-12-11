@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notification</title>
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
     <header>
@@ -20,10 +20,12 @@
             <% } %>
         </nav>
     </header>
-    <main>
+    <main class="login-container">
+        <div class="form-overlay">
         <h1>Error</h1>
         <p><%= message %></p>
         <a href="<%= redirectUrl %>">Go Back</a>
+    </div>
     </main>
     <footer>
         <p>&copy; Restaurant Finder - 2024</p>

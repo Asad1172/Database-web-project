@@ -16,25 +16,32 @@
     </header>
     <main>
         <h1>Your Favourite Restaurants</h1>
+<% if (minRating > 0) { %>
+    <p>Showing restaurants with a rating of <%= minRating %> stars or higher.</p>
+<% } %>
+
+
+        <!-- Filter Form -->
+        <form action="/restaurants/favourites" method="get">
+            <label for="minRating">Filter by Minimum Rating:</label>
+            <select id="minRating" name="minRating">
+                <option value="0" <%= minRating == 0 ? 'selected' : '' %>>Show All</option>
+                <option value="1" <%= minRating == 1 ? 'selected' : '' %>>1 Star</option>
+                <option value="2" <%= minRating == 2 ? 'selected' : '' %>>2 Stars</option>
+                <option value="3" <%= minRating == 3 ? 'selected' : '' %>>3 Stars</option>
+                <option value="4" <%= minRating == 4 ? 'selected' : '' %>>4 Stars</option>
+                <option value="5" <%= minRating == 5 ? 'selected' : '' %>>5 Stars</option>
+            </select>
+            <button type="submit">Apply Filter</button>
+        </form>
+
+        <!-- Display Favourites -->
         <% if (favourites && favourites.length > 0) { %>
             <% favourites.forEach((favourite) => { %>
                 <div>
                     <h3><%= favourite.restaurant_name %></h3>
                     <p>Rating: <%= favourite.restaurant_rating %></p>
                     <p>Address: <%= favourite.restaurant_address %></p>
-                    <p>Your Rating: <%= favourite.user_rating || 'Not Rated' %></p>
-                    <form action="/restaurants/rate" method="post">
-                        <input type="hidden" name="id" value="<%= favourite.id %>">
-                        <label for="rating-<%= favourite.id %>">Rate:</label>
-                        <select id="rating-<%= favourite.id %>" name="user_rating">
-                            <option value="1" <%= favourite.user_rating == 1 ? 'selected' : '' %>>1</option>
-                            <option value="2" <%= favourite.user_rating == 2 ? 'selected' : '' %>>2</option>
-                            <option value="3" <%= favourite.user_rating == 3 ? 'selected' : '' %>>3</option>
-                            <option value="4" <%= favourite.user_rating == 4 ? 'selected' : '' %>>4</option>
-                            <option value="5" <%= favourite.user_rating == 5 ? 'selected' : '' %>>5</option>
-                        </select>
-                        <button type="submit">Submit Rating</button>
-                    </form>
                     <form action="/restaurants/favourites/remove" method="post">
                         <input type="hidden" name="id" value="<%= favourite.id %>">
                         <button type="submit">Remove</button>
@@ -42,7 +49,7 @@
                 </div>
             <% }) %>
         <% } else { %>
-            <p>You have no favourites yet. Start searching and save your favourites!</p>
+            <p>No restaurants found for the selected rating. Try another filter!</p>
         <% } %>
     </main>
     <footer>

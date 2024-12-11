@@ -22,22 +22,46 @@
     </header>
     <main>
         <h1>Search Results</h1>
-        <% if (results && results.length > 0) { %>
+
+        <!-- Filter Form -->
+        <form action="/restaurants/search" method="get">
+            <label for="query">Search for:</label>
+            <input type="text" id="query" name="query" placeholder="e.g., Pizza, Sushi" value="<%= query %>">
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" placeholder="Enter a location" value="<%= location %>">
+
+            <label for="minRating">Minimum Rating:</label>
+            <select id="minRating" name="minRating">
+                <option value="0" <%= minRating == 0 ? 'selected' : '' %>>Show All</option>
+                <option value="1" <%= minRating == 1 ? 'selected' : '' %>>1 Star</option>
+                <option value="2" <%= minRating == 2 ? 'selected' : '' %>>2 Stars</option>
+                <option value="3" <%= minRating == 3 ? 'selected' : '' %>>3 Stars</option>
+                <option value="4" <%= minRating == 4 ? 'selected' : '' %>>4 Stars</option>
+                <option value="5" <%= minRating == 5 ? 'selected' : '' %>>5 Stars</option>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Display Results -->
+        <% if (error) { %>
+            <p style="color: red;"><%= error %></p>
+        <% } else if (results && results.length > 0) { %>
             <% results.forEach((restaurant) => { %>
-                <div class="restaurant">
+                <div>
                     <h3><%= restaurant.name %></h3>
-                    <p>Rating: <%= restaurant.rating || 'N/A' %></p>
-                    <p>Address: <%= restaurant.formatted_address || 'N/A' %></p>
+                    <p>Rating: <%= restaurant.rating %></p>
+                    <p>Address: <%= restaurant.formatted_address %></p>
                     <form action="/restaurants/favourites" method="post">
                         <input type="hidden" name="restaurantName" value="<%= restaurant.name %>">
                         <input type="hidden" name="restaurantAddress" value="<%= restaurant.formatted_address %>">
                         <input type="hidden" name="restaurantRating" value="<%= restaurant.rating %>">
                         <button type="submit">Add to Favourites</button>
-                    </form>                    
+                    </form>
                 </div>
             <% }) %>
         <% } else { %>
-            <p>No results found. Try another search!</p>
+            <p>No results found for your search criteria.</p>
         <% } %>
     </main>
     <footer>
