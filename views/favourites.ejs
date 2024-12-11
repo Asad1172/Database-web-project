@@ -16,10 +16,6 @@
     </header>
     <main>
         <h1>Your Favourite Restaurants</h1>
-<% if (minRating > 0) { %>
-    <p>Showing restaurants with a rating of <%= minRating %> stars or higher.</p>
-<% } %>
-
 
         <!-- Filter Form -->
         <form action="/restaurants/favourites" method="get">
@@ -38,8 +34,9 @@
         <!-- Display Favourites -->
         <% if (favourites && favourites.length > 0) { %>
             <% favourites.forEach((favourite) => { %>
-                <div>
+                <div class="restaurant">
                     <h3><%= favourite.restaurant_name %></h3>
+                    <img src="<%= favourite.image %>" alt="<%= favourite.restaurant_name %>" class="restaurant-image">
                     <p>Rating: <%= favourite.restaurant_rating %></p>
                     <p>Address: <%= favourite.restaurant_address %></p>
                     <form action="/restaurants/favourites/remove" method="post">
@@ -49,7 +46,7 @@
                 </div>
             <% }) %>
         <% } else { %>
-            <p>No restaurants found for the selected rating. Try another filter!</p>
+            <p>No favourites found for the selected rating. Try another filter!</p>
         <% } %>
     </main>
     <footer>
@@ -57,3 +54,4 @@
     </footer>
 </body>
 </html>
+

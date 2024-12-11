@@ -28,6 +28,7 @@ CREATE TABLE favourites (
     restaurant_address VARCHAR(255),
     restaurant_rating FLOAT,
     user_rating INT DEFAULT NULL,
+    restaurant_image VARCHAR(500) NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

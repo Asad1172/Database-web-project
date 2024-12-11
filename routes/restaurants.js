@@ -21,7 +21,7 @@ module.exports = (db) => {
     // Search for restaurants
     router.get('/search', async (req, res) => {
         const { query, location, minRating } = req.query;
-        const minRatingFilter = parseFloat(minRating) || 0; // Default to 0 if no minRating is provided
+        const minRatingFilter = parseFloat(minRating) || 0;
     
         try {
             // Step 1: Geocode the location
@@ -59,10 +59,17 @@ module.exports = (db) => {
                 },
             });
     
-            // Filter results based on the minimum rating
-            const filteredResults = placesResponse.data.results.filter(
-                (restaurant) => restaurant.rating >= minRatingFilter
-            );
+            // Step 3: Filter and format results with image URLs
+            const filteredResults = placesResponse.data.results
+                .filter((restaurant) => restaurant.rating >= minRatingFilter)
+                .map((restaurant) => ({
+                    name: restaurant.name,
+                    address: restaurant.formatted_address,
+                    rating: restaurant.rating,
+                    image: restaurant.photos
+                        ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${restaurant.photos[0].photo_reference}&key=${process.env.GOOGLE_PLACES_API_KEY}`
+                        : null, // Use `null` if no image is available
+                }));
     
             res.render('search', {
                 results: filteredResults,
@@ -86,6 +93,7 @@ module.exports = (db) => {
     });
     
     
+    
     module.exports = router;
 
     // Fetch user's favourite restaurants
@@ -104,18 +112,27 @@ module.exports = (db) => {
                 return res.status(500).send('Internal Server Error');
             }
     
+            // Format the results to include image URLs
+            const favourites = results.map((favourite) => ({
+                ...favourite,
+                image: favourite.restaurant_image
+                    ? favourite.restaurant_image
+                    : '/images/default-restaurant.jpg', // Fallback to a default image if no image URL is saved
+            }));
+    
             res.render('favourites', {
-                favourites: results,
+                favourites,
                 user: req.session.user,
                 minRating, // Pass the current filter value to the template
             });
         });
     });
     
+    
 
     // Add a restaurant to favourites
-    router.post('/favourites', requireLogin, (req, res) => {
-        const { restaurantName, restaurantAddress, restaurantRating } = req.body;
+router.post('/favourites', requireLogin, (req, res) => {
+    const { restaurantName, restaurantAddress, restaurantRating, restaurantImage } = req.body;
     const userId = req.session.user.id;
 
     if (!userId) {
@@ -139,8 +156,11 @@ module.exports = (db) => {
         }
 
         // Insert the restaurant into favourites
-        const insertSql = `INSERT INTO favourites (user_id, restaurant_name, restaurant_address, restaurant_rating) VALUES (?, ?, ?, ?)`;
-        db.query(insertSql, [userId, restaurantName, restaurantAddress, restaurantRating], (err) => {
+        const insertSql = `
+            INSERT INTO favourites (user_id, restaurant_name, restaurant_address, restaurant_rating, restaurant_image) 
+            VALUES (?, ?, ?, ?, ?)
+        `;
+        db.query(insertSql, [userId, restaurantName, restaurantAddress, restaurantRating, restaurantImage], (err) => {
             if (err) {
                 console.error('Database insert error:', err);
                 return res.status(500).send('Internal Server Error');

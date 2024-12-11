@@ -48,16 +48,21 @@
             <p style="color: red;"><%= error %></p>
         <% } else if (results && results.length > 0) { %>
             <% results.forEach((restaurant) => { %>
-                <div>
+                <div class="restaurant">
                     <h3><%= restaurant.name %></h3>
+                    <% if (restaurant.image) { %>
+                        <img src="<%= restaurant.image %>" alt="<%= restaurant.name %> Image" class="restaurant-image">
+                    <% } %>
                     <p>Rating: <%= restaurant.rating %></p>
-                    <p>Address: <%= restaurant.formatted_address %></p>
+                    <p>Address: <%= restaurant.address %></p>
                     <form action="/restaurants/favourites" method="post">
                         <input type="hidden" name="restaurantName" value="<%= restaurant.name %>">
-                        <input type="hidden" name="restaurantAddress" value="<%= restaurant.formatted_address %>">
+                        <input type="hidden" name="restaurantAddress" value="<%= restaurant.address %>">
                         <input type="hidden" name="restaurantRating" value="<%= restaurant.rating %>">
+                        <input type="hidden" name="restaurantImage" value="<%= restaurant.image ? restaurant.image : '' %>">
                         <button type="submit">Add to Favourites</button>
                     </form>
+                    
                 </div>
             <% }) %>
         <% } else { %>
