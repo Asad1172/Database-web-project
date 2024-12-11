@@ -1,0 +1,149 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header nav {
+    display: flex;
+    gap: 1rem;
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #f39c12;
+}
+
+/* Main Section */
+main {
+    flex: 1;
+    padding: 2rem;
+    text-align: center;
+    background: url('/images/good.jpg') no-repeat center center/cover;
+}
+
+main h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+main p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #555;
+}
+
+form {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: left;
+    font-size: 1rem;
+}
+
+form input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease;
+}
+
+form input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+form button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+form button:active {
+    transform: scale(1);
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    margin-top: auto;
+    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    form {
+        padding: 1.5rem;
+    }
+
+    header nav a {
+        font-size: 0.9rem;
+    }
+
+    main h1 {
+        font-size: 2rem;
+    }
+
+    main p {
+        font-size: 1rem;
+    }
+}
