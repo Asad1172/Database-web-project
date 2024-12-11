@@ -60,10 +60,11 @@
                         <input type="hidden" name="restaurantAddress" value="<%= restaurant.address %>">
                         <input type="hidden" name="restaurantRating" value="<%= restaurant.rating %>">
                         <input type="hidden" name="restaurantImage" value="<%= restaurant.image ? restaurant.image : '' %>">
+                        <input type="hidden" name="searchQuery" value="<%= query %>">
+                        <input type="hidden" name="searchLocation" value="<%= location %>">
                         <button type="submit">Add to Favourites</button>
                     </form>
-                    
-                </div>
+                    </div>
             <% }) %>
         <% } else { %>
             <p>No results found for your search criteria.</p>

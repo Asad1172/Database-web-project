@@ -96,43 +96,47 @@ module.exports = (db) => {
     
     module.exports = router;
 
-    // Fetch user's favourite restaurants
-    router.get('/favourites', (req, res) => {
-        const userId = req.session.user.id;
-        const minRating = parseFloat(req.query.minRating) || 0; // Default to 0 if no minRating is provided
-    
-        const sql = `
-            SELECT * FROM favourites 
-            WHERE user_id = ? AND restaurant_rating >= ?
-        `;
-    
-        global.db.query(sql, [userId, minRating], (err, results) => {
-            if (err) {
-                console.error('Database query error:', err);
-                return res.status(500).send('Internal Server Error');
-            }
-    
-            // Format the results to include image URLs
-            const favourites = results.map((favourite) => ({
-                ...favourite,
-                image: favourite.restaurant_image
-                    ? favourite.restaurant_image
-                    : '/images/default-restaurant.jpg', // Fallback to a default image if no image URL is saved
-            }));
-    
-            res.render('favourites', {
-                favourites,
-                user: req.session.user,
-                minRating, // Pass the current filter value to the template
-            });
+   // Fetch user's favourite restaurants
+router.get('/favourites', (req, res) => {
+    const userId = req.session.user.id;
+    const minRating = parseFloat(req.query.minRating) || 0; // Default to 0 if no minRating is provided
+    const searchQuery = req.query.query || ''; // Extract search query
+    const searchLocation = req.query.location || ''; // Extract search location
+
+    const sql = `
+        SELECT * FROM favourites 
+        WHERE user_id = ? AND restaurant_rating >= ?
+    `;
+
+    global.db.query(sql, [userId, minRating], (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        // Format the results to include image URLs
+        const favourites = results.map((favourite) => ({
+            ...favourite,
+            image: favourite.restaurant_image
+                ? favourite.restaurant_image
+                : '/images/default-restaurant.jpg', // Fallback to a default image if no image URL is saved
+        }));
+
+        res.render('favourites', {
+            favourites,
+            user: req.session.user,
+            minRating, // Pass the current filter value to the template
+            searchQuery, // Pass search query back to the template
+            searchLocation, // Pass search location back to the template
         });
     });
-    
+});
+
     
 
-    // Add a restaurant to favourites
+// Add a restaurant to favourites
 router.post('/favourites', requireLogin, (req, res) => {
-    const { restaurantName, restaurantAddress, restaurantRating, restaurantImage } = req.body;
+    const { restaurantName, restaurantAddress, restaurantRating, restaurantImage, searchQuery, searchLocation } = req.body;
     const userId = req.session.user.id;
 
     if (!userId) {
@@ -149,10 +153,7 @@ router.post('/favourites', requireLogin, (req, res) => {
 
         if (results.length > 0) {
             // Restaurant already exists in favourites
-            return res.render('message', {
-                message: 'This restaurant is already in your favourites.',
-                redirectUrl: '/restaurants/favourites',
-            });
+            return res.redirect(`/restaurants/favourites?query=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(searchLocation)}`);
         }
 
         // Insert the restaurant into favourites
@@ -166,10 +167,11 @@ router.post('/favourites', requireLogin, (req, res) => {
                 return res.status(500).send('Internal Server Error');
             }
 
-            res.redirect('/restaurants/favourites'); // Redirect to favourites page
+            res.redirect(`/restaurants/favourites?query=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(searchLocation)}`);
         });
     });
 });
+
 
     router.post('/favourites/remove', (req, res) => {
         const favouriteId = req.body.id;

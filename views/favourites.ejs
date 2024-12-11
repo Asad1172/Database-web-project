@@ -48,10 +48,18 @@
         <% } else { %>
             <p>No favourites found for the selected rating. Try another filter!</p>
         <% } %>
+
+        <!-- Go Back to Search Results Button -->
+        <% if (searchQuery && searchLocation) { %>
+            <form action="/restaurants/search" method="get">
+                <input type="hidden" name="query" value="<%= searchQuery %>">
+                <input type="hidden" name="location" value="<%= searchLocation %>">
+                <button type="submit">Go Back to Search Results</button>
+            </form>
+        <% } %>
     </main>
     <footer>
         <p>&copy; Restaurant Finder - 2024</p>
     </footer>
 </body>
 </html>
-
