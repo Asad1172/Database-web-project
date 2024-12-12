@@ -47,6 +47,16 @@ const db = mysql.createConnection ({
     password: 'qwertyuiop',
     database: 'restaurant_finder'
 })
+
+// Middleware to check if the user is logged in
+function requireLogin(req, res, next) {
+    if (!req.session || !req.session.user) {
+        return res.redirect('./users/login'); // Redirect to login page if not logged in
+    }
+    next(); // Proceed to the requested route
+}
+
+
 // Connect to the database
 db.connect((err) => {
     if (err) {
@@ -60,17 +70,11 @@ app.get('/', (req, res) => {
     if (req.session && req.session.user) {
         return res.render('index', { user: req.session.user }); // Render homepage for logged-in users
     }
-    return res.redirect('../users/login'); // Redirect to login page if not logged in
+    return requireLogin; // Redirect to login page if not logged in
 });
 
 
-// Middleware to check if the user is logged in
-function requireLogin(req, res, next) {
-    if (!req.session || !req.session.user) {
-        return res.redirect('./users/login'); // Redirect to login page if not logged in
-    }
-    next(); // Proceed to the requested route
-}
+
 
 // Apply the middleware to all routes except login and registration
 app.use((req, res, next) => {
