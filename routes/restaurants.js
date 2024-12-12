@@ -167,7 +167,7 @@ router.post('/favourites', requireLogin, (req, res) => {
                 return res.status(500).send('Internal Server Error');
             }
 
-            res.redirect(`./restaurants/favourites?query=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(searchLocation)}`);
+            res.redirect(`../restaurants/favourites?query=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(searchLocation)}`);
         });
     });
 });
@@ -187,7 +187,7 @@ router.post('/favourites', requireLogin, (req, res) => {
                 return res.status(500).send('Error deleting favourite.');
             }
     
-            res.redirect('./restaurants/favourites'); // Redirect back to favourites page
+            res.redirect('../restaurants/favourites'); // Redirect back to favourites page
         });
     });
 
