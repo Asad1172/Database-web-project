@@ -38,7 +38,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (e.g., CSS, JS) from the public folder
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '../public'));
 
 // Define the database connection
 const db = mysql.createConnection ({
