@@ -36,9 +36,22 @@
             <% favourites.forEach((favourite) => { %>
                 <div class="restaurant">
                     <h3><%= favourite.restaurant_name %></h3>
-                    <img src="<%= favourite.image %>" alt="<%= favourite.restaurant_name %>" class="restaurant-image">
-                    <p>Rating: <%= favourite.restaurant_rating %></p>
+                    <% if (favourite.image) { %>
+                        <img src="<%= favourite.image %>" alt="<%= favourite.restaurant_name %>" class="restaurant-image">
+                    <% } %>
+                    <p>Rating: <%= favourite.restaurant_rating %> / 5</p>
                     <p>Address: <%= favourite.restaurant_address %></p>
+                    <p class="user-rating">
+                        Your Rating: <span><%= favourite.user_rating ? favourite.user_rating : 'Not Rated' %></span>
+                    </p>
+                    <!-- Rate Restaurant Form -->
+                    <form action="/restaurants/rate" method="post" class="rating-form">
+                        <input type="hidden" name="id" value="<%= favourite.id %>">
+                        <label for="userRating<%= favourite.id %>">Update Rating:</label>
+                        <input type="number" name="user_rating" id="userRating<%= favourite.id %>" min="1" max="5" step="1" placeholder="1-5">
+                        <button type="submit">Submit Rating</button>
+                    </form>
+                    <!-- Remove Restaurant Form -->
                     <form action="/restaurants/favourites/remove" method="post">
                         <input type="hidden" name="id" value="<%= favourite.id %>">
                         <button type="submit">Remove</button>

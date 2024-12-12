@@ -143,32 +143,30 @@ form button:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Button Styles */
-.restaurant form button {
-    background-color: #dc3545;
-    color: #fff;
-    padding: 0.8rem 1.5rem;
+.user-rating {
+    margin: 1rem 0;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.user-rating span {
+    color: #28a745;
+}
+
+/* Rating Form */
+.rating-form {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rating-form input[type="number"] {
+    width: 60px;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.restaurant form button:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
-}
-
-/* Go Back Button */
-form button[type="submit"] {
-    background-color: #007bff;
-    color: #fff;
-}
-
-form button[type="submit"]:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
+    text-align: center;
 }
 
 /* Footer */
