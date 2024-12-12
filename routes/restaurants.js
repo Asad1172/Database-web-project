@@ -11,12 +11,12 @@ module.exports = (db) => {
     const router = express.Router();
 
     // Middleware to require login
-    function requireLogin(req, res, next) {
-        if (!req.session.user) {
-            return res.redirect('../users/login');
-        }
-        next();
-    }
+    // function requireLogin(req, res, next) {
+    //     if (!req.session.user) {
+    //         return res.redirect('../users/login');
+    //     }
+    //     next();
+    // }
 
     // Search for restaurants
     router.get('/search', async (req, res) => {
@@ -135,7 +135,7 @@ router.get('/favourites', (req, res) => {
     
 
 // Add a restaurant to favourites
-router.post('/favourites', requireLogin, (req, res) => {
+router.post('/favourites', (req, res) => {
     const { restaurantName, restaurantAddress, restaurantRating, restaurantImage, searchQuery, searchLocation } = req.body;
     const userId = req.session.user.id;
 
