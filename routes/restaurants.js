@@ -135,11 +135,11 @@ router.get('/favourites', (req, res) => {
     
 
 // Add a restaurant to favourites
-router.post('/favourites', requireLogin, (req, res) => {
+router.post('/favourites', (req, res) => {
     const { restaurantName, restaurantAddress, restaurantRating, restaurantImage, searchQuery, searchLocation } = req.body;
     const userId = req.session.user.id;
 
-    
+   
 
     // Check if the restaurant is already in favourites
     const checkSql = `SELECT * FROM favourites WHERE user_id = ? AND restaurant_name = ? AND restaurant_address = ?`;
