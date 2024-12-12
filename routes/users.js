@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
         }
 
         req.session.user = { id: user.id, username: user.username, email: user.email };
-        return res.redirect('/');
+        return res.redirect('../');
     });
 });
 
