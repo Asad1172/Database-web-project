@@ -14,7 +14,7 @@ router.post('/register', async (req, res) => {
     const sql = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
     db.query(sql, [username, email, hashedPassword], (err) => {
         if (err) throw err;
-        res.redirect('/users/login');
+        res.redirect('../users/login');
     });
 });
 
@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
         if (results.length === 0) {
             return res.render('message', {
                 message: 'Invalid email or password. Please try again.',
-                redirectUrl: '/users/login',
+                redirectUrl: '../users/login',
             });
         }
 
@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
         if (!isMatch) {
             return res.render('message', {
                 message: 'Invalid email or password. Please try again.',
-                redirectUrl: '/users/login',
+                redirectUrl: '../users/login',
             });
         }
 
