@@ -13,7 +13,7 @@ module.exports = (db) => {
     // Middleware to require login
     function requireLogin(req, res, next) {
         if (!req.session.user) {
-            return res.redirect('/users/login');
+            return res.redirect('../users/login');
         }
         next();
     }
@@ -135,11 +135,13 @@ router.get('/favourites', (req, res) => {
     
 
 // Add a restaurant to favourites
-router.post('/favourites', (req, res) => {
+router.post('/favourites', requireLogin, (req, res) => {
     const { restaurantName, restaurantAddress, restaurantRating, restaurantImage, searchQuery, searchLocation } = req.body;
     const userId = req.session.user.id;
 
-   
+    // if (!userId) {
+    //     return res.redirect('/users/login'); // Redirect to login page if user is not logged in
+    // }
 
     // Check if the restaurant is already in favourites
     const checkSql = `SELECT * FROM favourites WHERE user_id = ? AND restaurant_name = ? AND restaurant_address = ?`;
