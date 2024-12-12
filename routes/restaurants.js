@@ -205,7 +205,7 @@ router.post('/favourites', (req, res) => {
                 return res.status(500).send('Error updating rating.');
             }
     
-            res.redirect('./'); // Redirect back to the favourites page
+            res.redirect('./favourites'); // Redirect back to the favourites page
         });
     });
     
