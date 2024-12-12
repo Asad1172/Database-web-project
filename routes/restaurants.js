@@ -153,7 +153,7 @@ router.post('/favourites', requireLogin, (req, res) => {
 
         if (results.length > 0) {
             // Restaurant already exists in favourites
-            return res.redirect(`/restaurants/favourites?query=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(searchLocation)}`);
+            return res.redirect(`../restaurants/favourites?query=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(searchLocation)}`);
         }
 
         // Insert the restaurant into favourites
