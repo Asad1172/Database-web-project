@@ -10,6 +10,17 @@ body {
     min-height: 100vh;
 }
 
+/* Background Image */
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
 h1, h2, h3 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -46,21 +57,32 @@ main {
     flex: 1;
     padding: 2rem;
     text-align: center;
-    background: url('/images/good.jpg') no-repeat center center/cover;
 }
 
 main h1 {
     font-size: 2.5rem;
-    color: #333;
+    color: #000000;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.3); 
+    display: inline-block; 
+    padding: 0.2rem 0.5rem; 
+    border-radius: 5px; 
 }
 
+
 main p {
+    display: block; /* Ensures the paragraph takes up its own line */
+    width: fit-content; /* Shrinks the box to fit content */
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
     font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: #555;
+    margin: 1rem auto; /* Centers the box and adds space from heading */
+    color: #000000;
+    text-align: center;
 }
+
 
 form {
     background-color: rgba(255, 255, 255, 0.9);
