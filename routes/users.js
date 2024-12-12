@@ -66,7 +66,7 @@ router.get('/logout', (req, res) => {
             console.error('Session destruction error:', err);
             return res.status(500).send('Internal Server Error');
         }
-        res.redirect('/users/login'); // Redirect to login page after logout
+        res.redirect('../users/login'); // Redirect to login page after logout
     });
 });
 
