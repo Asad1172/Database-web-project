@@ -210,6 +210,10 @@ router.post('/favourites', (req, res) => {
     });
     
     
+// About Page
+router.get('/about', (req, res) => {
+    res.render('about', { shopData: req.app.locals.shopData, user: req.session.user });
+});
     
 
     return router;
