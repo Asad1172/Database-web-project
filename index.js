@@ -51,7 +51,7 @@ const db = mysql.createConnection ({
 // Middleware to check if the user is logged in
 function requireLogin(req, res, next) {
     if (!req.session || !req.session.user) {
-        return res.redirect('./users/login'); // Redirect to login page if not logged in
+        return res.redirect('../users/login'); // Redirect to login page if not logged in
     }
     next(); // Proceed to the requested route
 }
