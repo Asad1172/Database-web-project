@@ -187,7 +187,7 @@ router.post('/favourites', requireLogin, (req, res) => {
                 return res.status(500).send('Error deleting favourite.');
             }
     
-            res.redirect('../restaurants/favourites'); // Redirect back to favourites page
+            res.redirect('./'); // Redirect back to favourites page
         });
     });
 
