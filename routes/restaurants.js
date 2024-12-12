@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
+const crypto = require("crypto");
 
 const googleApiUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
 const geocodeApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
@@ -214,6 +215,32 @@ router.post('/favourites', (req, res) => {
 router.get('/about', (req, res) => {
     res.render('about', { shopData: req.app.locals.shopData, user: req.session.user });
 });
+
+
+//Route to API key
+router.get("/apiKey", async (req, res) => {
+    try {
+
+        const userId = req.session.user.id;
+
+        const apiKeySql = "SELECT api_key FROM users WHERE id = ?";
+        const [results] = await db.promise().query(apiKeySql, [userId]);
+
+        let apiKey = results[0]?.api_key;
+        if (!apiKey) {
+            apiKey = crypto.randomBytes(16).toString("hex");
+            const updateSql = "UPDATE users SET api_key = ? WHERE id = ?";
+            await db.promise().query(updateSql, [apiKey, userId]);
+        }
+
+
+        res.render("apikey", { apiKey });
+    } catch (err) {
+        console.error("Error fetching or generating API key:", err);
+        res.status(500).send("An error occurred while fetching or generating your API key.");
+    }
+});
+
     
 
     return router;
