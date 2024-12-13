@@ -1,0 +1,27 @@
+
+{
+  "name": "database-web-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "all": "^0.0.0",
+    "axios": "^1.7.9",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-sanitizer": "^1.0.6",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.0",
+    "mysql2": "^3.11.2",
+    "pug": "^3.0.2",
+    "request": "^2.88.2"
+  }
+}
