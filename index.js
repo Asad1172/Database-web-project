@@ -41,12 +41,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 // Define the database connection
-const db = mysql.createConnection ({
+const db = mysql.createPool({
     host: 'localhost',
     user: 'restaurant',
     password: 'qwertyuiop',
-    database: 'restaurant_finder'
-})
+    database: 'restaurant_finder',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
+//Test database connection
+db.getConnection((err, connection) => {
+    if (err) {
+        console.error('Database connection failed:', err);
+        process.exit(1); 
+    } else {
+        console.log('Connected to database');
+        connection.release();
+    }
+});
+global.db = db
 
 // Middleware to check if the user is logged in
 function requireLogin(req, res, next) {
@@ -57,21 +72,14 @@ function requireLogin(req, res, next) {
 }
 
 
-// Connect to the database
-db.connect((err) => {
-    if (err) {
-        throw err
-    }
-    console.log('Connected to database')
-})
-global.db = db
-
 app.get('/', (req, res) => {
     if (req.session && req.session.user) {
         return res.render('index', { user: req.session.user }); // Render homepage for logged-in users
     }
     return res.redirect('./users/login'); // Redirect to login page if not logged in
 });
+
+
 
 
 
