@@ -101,8 +101,8 @@ module.exports = (db) => {
 router.get('/favourites', (req, res) => {
     const userId = req.session.user.id;
     const minRating = parseFloat(req.query.minRating) || 0; // Default to 0 if no minRating is provided
-    const searchQuery = req.query.query || ''; // Extract search query
-    const searchLocation = req.query.location || ''; // Extract search location
+    const searchQuery = req.query.query || ''; 
+    const searchLocation = req.query.location || ''; 
 
     const sql = `
         SELECT * FROM favourites 
